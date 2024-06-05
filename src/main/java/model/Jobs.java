@@ -1,8 +1,11 @@
 package model;
 
+import jakarta.xml.bind.annotation.XmlRootElement;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+@XmlRootElement
 public class Jobs {
     private int jobID;
     private String jobnTitle;

@@ -1,61 +1,85 @@
 package controller;
 
-import dao.JobDAO;
 import jakarta.ws.rs.*;
-import model.Jobs;
+import jakarta.ws.rs.core.MediaType;
+import org.example.dao.JobDAO;
+import org.example.dto.JobsFilterDto;
+import org.example.models.Jobs;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
-
-@Path("jobs")
+@Path("/jobs")
 public class JobsController {
+
     JobDAO dao = new JobDAO();
 
     @GET
-    public ArrayList<Jobs> selectAllDepts() {
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public ArrayList<Jobs> selectAllDepts(
+            //       @QueryParam("minSalary") double minSalary,
+            //       @QueryParam("limit") Integer limit,
+            //       @QueryParam("offset") int offset
+            @BeanParam JobsFilterDto filter
+
+    ){
         try {
-            return dao.selectAllDepts();
-        } catch (Exception e) {
+
+            // return dao.selectAllDepts(minSalary,limit,offset);
+            return dao.selectAllJobs(filter);
+        }catch (Exception e){
             throw new RuntimeException(e);
         }
     }
 
     @GET
     @Path("{jobID}")
-    public Jobs getJobs(@PathParam("jobId") int jobId) {
+    public Jobs getJobs(@PathParam("jobID") int jobID) {
+
         try {
-            return dao.selectJobs(jobId);
+            return dao.selectJobs(jobID);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
     @DELETE
-    @Path("{jobId}")
-    public void deleteJobs(@PathParam("jobId")int jobId){
+    @Path("{jobID}")
+    public void deleteJobs(@PathParam("jobID") int jobId) {
+
         try {
             dao.deleteJobs(jobId);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
+
     @POST
-    public void insertJobs(Jobs job){
+    @Consumes(MediaType.APPLICATION_XML)
+    public void insertJobs(Jobs job) {
+
         try {
             dao.insertJobs(job);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
+
     @PUT
-    @Path("{jobId}")
-    public void updateJobs(@PathParam("jobId")int jobId, Jobs job){
+    @Path("{jobID}")
+    public void updateJobs(@PathParam("jobID") int jobID,Jobs job) {
+
         try {
-            job.setJobID(jobId);
+            job.setJobID(jobID);
             dao.updateJobs(job);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
-}
 
+
+    @Path("{jobID}/jobs")
+    public JobsController getJobsController() {
+        return new JobsController();
+    }
+
+
+}
