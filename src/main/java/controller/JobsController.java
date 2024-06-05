@@ -1,11 +1,18 @@
 package controller;
 
+import dao.JobDAO;
+import dto.JobsFilterDto;
+import exceptions.DataNotFoundException;
 import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.GenericEntity;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import model.Jobs;
 import org.example.dao.JobDAO;
 import org.example.dto.JobsFilterDto;
-import org.example.models.Jobs;
+import org.example.model.Jobs;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 @Path("/jobs")
 public class JobsController {
@@ -22,9 +29,12 @@ public class JobsController {
 
     ){
         try {
-
-            // return dao.selectAllDepts(minSalary,limit,offset);
-            return dao.selectAllJobs(filter);
+            GenericEntity<ArrayList<Jobs>> jobss= new GenericEntity<Jobs>(dao.selectAllJobs());
+            if (headers.getAcceptableMediaTypes().contains(MediaType.valueOf(MediaType.APPLICATION_XML)))
+            return Response
+                    .ok(jobss)
+                    .type(MediaType.APPLICATION_XML)
+                    .build();
         }catch (Exception e){
             throw new RuntimeException(e);
         }
@@ -32,9 +42,19 @@ public class JobsController {
 
     @GET
     @Path("{jobID}")
-    public Jobs getJobs(@PathParam("jobID") int jobID) {
+    public Jobs getJobs(@PathParam("jobID") int jobID) throws SQLException {
 
         try {
+            Jobs jobs = dao.selectJobs(jobID);
+
+            if (jobs == null)
+            {
+                throw new DataNotFoundException("Jobs"+ jobID + "Not found")
+            }
+            JobsFilterDto dto = new Jobs();
+            dto.setjobId(jobs.getJobID());
+            dto.setjobnTitle(jobs.getJobnTitle());
+            dto.setMinSalary(jobs.getMinSalary());
             return dao.selectJobs(jobID);
         } catch (Exception e) {
             throw new RuntimeException(e);

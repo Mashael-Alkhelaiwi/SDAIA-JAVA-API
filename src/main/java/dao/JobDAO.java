@@ -1,7 +1,9 @@
 package dao;
 
+import dto.JobsFilterDto;
+import model.Jobs;
 import org.example.dto.JobsFilterDto;
-import org.example.models.Jobs;
+import org.example.model.Jobs;
 
 import java.sql.*;
 import java.util.ArrayList;

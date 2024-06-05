@@ -6,6 +6,8 @@ public class JobsFilterDto {
     private @QueryParam("limit") Integer limit;
     private @QueryParam("offset") int offset;
 
+
+    p
     public double getMinSalary() {
         return minSalary;
     }
