@@ -1,38 +1,62 @@
 package controller;
 
-import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
-import jakarta.ws.rs.core.Context;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.UriInfo;
-import model.Employee;
-import org.example.models.Department;
+import org.example.dao.EmployeeDAO;
 import org.example.models.Employee;
 
-import java.net.URI;
 import java.util.ArrayList;
-import java.util.List;
 
 @Path("/employees")
-public class EmployeeController {
+public class EmployeeController
+{
+    EmployeeDAO employeeDAO = new EmployeeDAO();
 
     @GET
-    public ArrayList<Employee> getAllEmployees(@PathParam("deptId") Integer deptId) {
-        System.out.println(deptId);
-        ArrayList<Employee> employees = new ArrayList<>();
-        employees.add(new Employee());
-        employees.add(new Employee());
-        employees.add(new Employee());
-        employees.add(new Employee());
-        return employees;
+    public ArrayList<Employee> getAllEmployees() {
+        try {
+            return employeeDAO.selectAllEmployees();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @GET
+    @Path("{employeeId}")
+    public Employee getEmployee(@PathParam("employeeId") int employeeId) {
+        try {
+            return employeeDAO.selectEmployee(employeeId);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @DELETE
+    @Path("{employeeId}")
+    public void deleteEmployee(@PathParam("employeeId") int employeeId) {
+        try {
+            employeeDAO.deleteEmployee(employeeId);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @POST
-    public void insertEmployee(@PathParam("deptId") Integer deptId, Employee emp) {
-
-        System.out.println(deptId);
-        System.out.println(emp);
+    public void insertEmployee(Employee employee) {
+        try {
+            employeeDAO.insertEmployee(employee);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
+    @PUT
+    @Path("{employeeId}")
+    public void updateEmployee(@PathParam("employeeId") int employeeId, Employee employee) {
+        try {
+            employee.setEmployee_id(employeeId);
+            employeeDAO.updateEmployee(employee);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

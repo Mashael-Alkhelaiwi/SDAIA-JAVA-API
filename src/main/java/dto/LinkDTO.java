@@ -1,7 +1,8 @@
 package dto;
 
-public class LinkDto {
 
+public class LinkDTO
+{
     private String link;
     private String rel;
 
