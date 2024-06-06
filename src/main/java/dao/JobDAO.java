@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 public class JobDAO
 {
-    private static final String URL = "jdbc:sqlite:C:\\Users\\dev\\Desktop\\JavaBasics\\src\\main\\java\\day4\\session3\\hr.db";
+    private static final String URL = "jdbc:sqlite:C:\Users\dev\IdeaProjects\exDay6";
     private static final String SELECT_ALL_JOBS = "select * from jobs";
     private static final String SELECT_ALL_JOBS_with_min_salary = "select * from jobs where min_salary = ?";
     private static final String SELECT_ALL_JOBS_with_min_salary_PAGINATION = "select * from jobs where min_salary = ? order by job_id limit ? offset ?";
